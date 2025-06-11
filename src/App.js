@@ -62,7 +62,7 @@ export default function App() {
     }
   };
 
-  const COLORS = ['#EF4444', '#10B981']; // red (risk), green (safe)
+  const COLORS = ['#EF4444', '#10B981']; // red, green
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 px-4 py-6 text-gray-800 dark:text-white transition-all">
@@ -74,20 +74,32 @@ export default function App() {
             {theme === 'dark' ? '🌞 Light Mode' : '🌙 Dark Mode'}
           </button>
         </div>
+
         <div className="flex flex-col sm:flex-row gap-3">
-          <input type="url" value={url} onChange={(e) => setUrl(e.target.value)}
+          <input
+            type="url"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
             placeholder="Paste a URL to scan"
-            className="flex-1 px-4 py-3 rounded-lg border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-800" />
-          <button onClick={() => handleScan()} disabled={loading}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">
+            className="flex-1 px-4 py-3 rounded-lg border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-800"
+          />
+          <button
+            onClick={() => handleScan()}
+            disabled={loading}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+          >
             {loading ? 'Scanning...' : 'Scan'}
           </button>
         </div>
 
         <AnimatePresence>
           {result && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
-              className="bg-blue-50 dark:bg-slate-800 border border-blue-300 dark:border-slate-700 rounded-xl p-6 shadow space-y-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="bg-blue-50 dark:bg-slate-800 border border-blue-300 dark:border-slate-700 rounded-xl p-6 shadow space-y-4"
+            >
               {result.error ? (
                 <p className="text-red-600">❌ {result.error}</p>
               ) : (
@@ -98,6 +110,7 @@ export default function App() {
                     <p>🧠 <strong>Checked By:</strong> Nasrev</p>
                     <p>🕓 <strong>Checked At:</strong> {new Date(result.checkedAt).toLocaleString()}</p>
                   </div>
+
                   <div className="space-y-2">
                     <p className="text-xs text-gray-500">📊 Risk Meter</p>
                     <div className="risk-bar w-full">
@@ -107,9 +120,17 @@ export default function App() {
                       ></div>
                     </div>
                   </div>
+
                   <div className="pt-4">
                     <PieChart width={280} height={200}>
-                      <Pie data={getChartData(result.status)} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={60}>
+                      <Pie
+                        data={getChartData(result.status)}
+                        dataKey="value"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={60}
+                      >
                         {getChartData(result.status).map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
