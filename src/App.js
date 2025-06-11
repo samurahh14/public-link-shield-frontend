@@ -46,7 +46,17 @@ export default function App() {
               ) : (
                 <>
                   <p className="text-lg font-semibold mb-2">✅ Scan Result</p>
-                  <pre className="text-sm">{JSON.stringify(result, null, 2)}</pre>
+                  {result.error ? (
+  <p className="text-red-600">❌ {result.error}</p>
+) : (
+  <div className="space-y-2 text-sm text-gray-800 dark:text-gray-200">
+    <p>✅ <strong>Status:</strong> {result.status}</p>
+    <p>🧾 <strong>Message:</strong> {result.message}</p>
+    <p>🧠 <strong>Checked By:</strong> Nasrev</p>
+    <p>🕓 <strong>Checked At:</strong> {new Date(result.checkedAt).toLocaleString()}</p>
+  </div>
+)}
+
                 </>
               )}
             </motion.div>
