@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { AnimatePresence, motion } from 'framer-motion';
+import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
 function getRiskLevel(status) {
   switch (status?.toLowerCase()) {
@@ -11,6 +12,14 @@ function getRiskLevel(status) {
     case 'phishing': return { percent: 100, color: 'bg-red-600' };
     default: return { percent: 0, color: 'bg-gray-400' };
   }
+}
+
+function getChartData(status) {
+  const risk = getRiskLevel(status).percent;
+  return [
+    { name: 'Risk', value: risk },
+    { name: 'Safe', value: 100 - risk },
+  ];
 }
 
 export default function App() {
@@ -53,6 +62,8 @@ export default function App() {
     }
   };
 
+  const COLORS = ['#EF4444', '#10B981']; // red (risk), green (safe)
+
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 px-4 py-6 text-gray-800 dark:text-white transition-all">
       <div className="max-w-3xl mx-auto space-y-6">
@@ -72,6 +83,7 @@ export default function App() {
             {loading ? 'Scanning...' : 'Scan'}
           </button>
         </div>
+
         <AnimatePresence>
           {result && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
@@ -95,11 +107,23 @@ export default function App() {
                       ></div>
                     </div>
                   </div>
+                  <div className="pt-4">
+                    <PieChart width={280} height={200}>
+                      <Pie data={getChartData(result.status)} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={60}>
+                        {getChartData(result.status).map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                      <Legend />
+                    </PieChart>
+                  </div>
                 </>
               )}
             </motion.div>
           )}
         </AnimatePresence>
+
         {history.length > 0 && (
           <div>
             <h2 className="text-md font-semibold mb-2">📜 Recent Scans</h2>
